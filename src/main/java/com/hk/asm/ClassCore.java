@@ -1,5 +1,6 @@
 package com.hk.asm;
 
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 
-public class Core {
+public class ClassCore {
 
 
     //解析class文件
@@ -185,6 +186,57 @@ public class Core {
                 return null;
             }
             return cv.visitMethod(access, name, descriptor, signature, exceptions);
+        }
+    }
+
+
+    //添加字段
+    public class AddFieldAdapter extends ClassVisitor {
+
+        private int fAcc;
+        private String fName;
+        private String fDesc;
+        private boolean isFieldPresent;
+
+        public AddFieldAdapter(ClassVisitor cv, int fAcc, String fName, String fDesc) {
+            super(Opcodes.ASM4, cv);
+            this.fAcc = fAcc;
+            this.fName = fName;
+            this.fDesc = fDesc;
+        }
+
+        @Override
+        public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
+            if(name.equals(fName)) {
+                isFieldPresent = true;
+            }
+            return cv.visitField(access, name, descriptor, signature, value);
+        }
+
+        @Override
+        public void visitEnd() {
+            if(!isFieldPresent) {
+                FieldVisitor fv = cv.visitField(fAcc, fName, fDesc, null, null);
+                if(fv != null) {
+                    fv.visitEnd();
+                }
+            }
+            cv.visitEnd();
+        }
+    }
+
+    //转化链
+    public class MultiClassAdapter extends ClassVisitor {
+        protected ClassVisitor[] cvs;
+        public MultiClassAdapter(ClassVisitor[] cvs) {
+            super(Opcodes.ASM4);
+            this.cvs = cvs;
+        }
+        @Override
+        public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+            for(ClassVisitor cv: cvs) {
+                cv.visit(version, access, name, signature, superName, interfaces);
+            }
         }
     }
 
