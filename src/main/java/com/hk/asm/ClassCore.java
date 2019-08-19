@@ -2,6 +2,7 @@ package com.hk.asm;
 
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.objectweb.asm.*;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -94,8 +95,7 @@ public class ClassCore {
         cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT, "compareTo", "(Ljava/lang/Object;)I", null
                 , null).visitEnd();
 
-        byte[] b = cw.toByteArray();
-        return b;
+        return cw.toByteArray();
     }
 
 
@@ -238,6 +238,17 @@ public class ClassCore {
                 cv.visit(version, access, name, signature, superName, interfaces);
             }
         }
+    }
+
+
+    //TraceClassVisitor
+    public void testTraceClassVisitor() {
+//        ClassWriter cw = new ClassWriter(0);
+//        TraceClassVisitor cv = new TraceClassVisitor(cw, printWriter);
+//
+//        cv.visit();
+//        cv.visitEnd();
+//        byte[] b = cw.toByteArray();
     }
 
 
