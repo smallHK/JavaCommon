@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 
 import javax.inject.Inject;
 
+
 public class Main {
 
     interface Des extends Runnable {
@@ -37,6 +38,7 @@ public class Main {
     private void boot() {
         des.run();
     }
+
 
 
 
