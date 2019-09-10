@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-09-08T08:16:25.628550800Z</date>
+  <millis>1567930585628</millis>
+  <nanos>550800</nanos>
+  <sequence>1</sequence>
+  <logger>hk.logging</logger>
+  <level>INFO</level>
+  <class>com.hk.logging.Main</class>
+  <method>logDependsSpec</method>
+  <thread>1</thread>
+  <message>doing stuff</message>
+</record>
+<record>
+  <date>2019-09-08T08:16:25.632541500Z</date>
+  <millis>1567930585632</millis>
+  <nanos>541500</nanos>
+  <sequence>2</sequence>
+  <logger>hk.logging</logger>
+  <level>FINEST</level>
+  <class>com.hk.logging.Main</class>
+  <method>logDependsSpec</method>
+  <thread>1</thread>
+  <message>doing stuff</message>
+</record>
+</log>
