@@ -25,7 +25,6 @@ public class SimpleServer {
 
         System.out.println("Accept Request!");
         HttpEntity entity = ((HttpEntityEnclosingRequest)request).getEntity();
-
         try(var is = entity.getContent()) {
             String result = new String(is.readAllBytes());
             System.out.println(result);
@@ -40,7 +39,7 @@ public class SimpleServer {
     private HttpProcessor processor = HttpProcessorBuilder.create().build();
 
     private final HttpServer server = ServerBootstrap.bootstrap()
-            .setListenerPort(8080)
+            .setListenerPort(8081)
             .setHttpProcessor(processor)
             .setSocketConfig(socketConfig)
             .registerHandler("*", handler)
