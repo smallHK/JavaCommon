@@ -8,7 +8,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cors.CorsConfig;
-import io.netty.handler.codec.http.cors.CorsConfigBuilder;
 import io.netty.handler.codec.http.cors.CorsHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -39,7 +38,7 @@ public class HttpServer {
 
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            CorsConfig corsConfig = CorsConfigBuilder.forAnyOrigin().allowNullOrigin().allowCredentials().build();
+            CorsConfig corsConfig = CorsConfig.withAnyOrigin().allowCredentials().build();
             ChannelPipeline pipeline = ch.pipeline();
             if(sslCtx != null) {
                 pipeline.addLast(sslCtx.newHandler(ch.alloc()));
