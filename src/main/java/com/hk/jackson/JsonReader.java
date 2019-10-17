@@ -3,7 +3,10 @@ package com.hk.jackson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +38,7 @@ public class JsonReader {
 
         JsonNode root = null;
         try {
-             root = mapper.readTree(data);
+            root = mapper.readTree(data);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -54,7 +57,7 @@ public class JsonReader {
         } catch (IOException e) {
             System.exit(1);
         }
-        ObjectNode mRoot = (ObjectNode)root;
+        ObjectNode mRoot = (ObjectNode) root;
         mRoot.put("gps", 1.44444);
         mRoot.put("data", new Date().getTime());
 
@@ -67,11 +70,51 @@ public class JsonReader {
     }
 
 
+    @Getter
+    @Setter
+    static class RawJsonBind {
+
+        public String name;
+
+        public ObjectNode json;
+    }
+
+
+    /**
+     * 解析嵌套对象
+     */
+    private static void parseJsonBind() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNodeFactory factory = JsonNodeFactory.instance;
+        ObjectNode node = factory.objectNode();
+        node.put("name", "test");
+        node.with("json").put("test", "123");
+        String jsonStr = null;
+        try {
+            jsonStr = mapper.writeValueAsString(node);
+            System.out.println(jsonStr);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            RawJsonBind bean = mapper.readValue(jsonStr, RawJsonBind.class);
+            System.out.println(bean.getJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public static void main(String[] args) {
 
         var main = new JsonReader();
 //        main.beautyJson();
         //main.parseJsonStr();
-        main.modifyJsonStr();
+//        main.modifyJsonStr();
+
+        parseJsonBind();
     }
 }
