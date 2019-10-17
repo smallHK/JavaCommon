@@ -30,7 +30,8 @@ public class SimpleClient {
         Map<String, Object> params = new HashMap<>();
         params.put("max_fps", 90);
         CloseableHttpClient client = HttpClients.custom().build();
-        HttpPost post = new HttpPost("localhost:8080");
+        HttpPost post = new HttpPost("http://localhost:18085");
+        post.addHeader("Connection", "close");
 
         for (String key : params.keySet()) {
             String value = String.valueOf(params.get(key));
@@ -68,7 +69,7 @@ public class SimpleClient {
         var cm = new PoolingHttpClientConnectionManager();
         cm.setMaxTotal(200);
         cm.setDefaultMaxPerRoute(20);
-        cm.setMaxPerRoute(new HttpRoute(new HttpHost("localhost", 8081)), 50);
+        cm.setMaxPerRoute(new HttpRoute(new HttpHost("localhost", 18085)), 50);
 
 
         int count = 0;
@@ -76,7 +77,7 @@ public class SimpleClient {
 
             System.out.println("Loop count:" + count++);
             var client = HttpClients.custom().setConnectionManager(cm).build();
-            var post = new HttpPost("http://localhost:8081");
+            var post = new HttpPost("http://localhost:18085");
             var config = RequestConfig.custom()
                     .setConnectionRequestTimeout(5 * 1000)
                     .setConnectTimeout(5 * 1000)
@@ -107,11 +108,13 @@ public class SimpleClient {
     public static void main(String[] args) {
 
         var main = new SimpleClient();
-        main.poolClient();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            main.shutdown = true;
-        }));
+//        main.poolClient();
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            main.shutdown = true;
+//        }));
 
+
+        main.postFromData();
     }
 
 
