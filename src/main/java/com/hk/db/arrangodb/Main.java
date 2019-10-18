@@ -1,4 +1,4 @@
-package com.hk.arrangodb;
+package com.hk.db.arrangodb;
 
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoDB;
