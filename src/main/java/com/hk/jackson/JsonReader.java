@@ -90,6 +90,7 @@ public class JsonReader {
         ObjectNode node = factory.objectNode();
         node.put("name", "test");
         node.with("json").put("test", "123");
+
         String jsonStr = null;
         try {
             jsonStr = mapper.writeValueAsString(node);
