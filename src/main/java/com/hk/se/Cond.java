@@ -47,7 +47,7 @@ class BoundedBuffer<E> {
     }
 }
 
-
+//测试Condition功能
 public class Cond {
 
     public static void main(String[] args) {

@@ -1,35 +1,21 @@
 package com.hk.se;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
-class UnitTask implements Runnable {
 
-    int flag;
-
-    UnitTask(int flag) {
-        this.flag = flag;
-    }
-
-    public void run() {
-        System.out.println("Task " + flag + " start!");
-
-        try{
-            Thread.sleep(5 * 100);
-        }catch(Exception e) {
-
-        }
-
-        System.out.println("Task " + flag + " finished!");
-    }
-
-}
 
 public class ThreadPool {
 
     public static void main(String[] args) {
 
-        var executor = Executors.newFixedThreadPool(10);
+        int coreNum = Runtime.getRuntime().availableProcessors();
+        ThreadPoolExecutor executor =
+                new ThreadPoolExecutor(coreNum, coreNum, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+
+
 
         System.out.println("before submit!");
 
@@ -46,6 +32,13 @@ public class ThreadPool {
 //            e.printStackTrace();
 //        }
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("complete task: " + executor.getCompletedTaskCount());
         System.out.println("finish!");
 
 
