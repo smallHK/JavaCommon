@@ -11,8 +11,22 @@ import lombok.Setter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 public class JsonReader {
+
+
+    //从json文件构建map
+    private void gainMapFromJsonFile() {
+        File file = new File(System.getProperty("user.dir") + File.separator + "vp.json");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map result = mapper.readValue(file, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void beautyJson() {
 
