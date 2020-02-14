@@ -1,6 +1,5 @@
 package com.hk.db.h2;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.File;
 import java.sql.*;
 
