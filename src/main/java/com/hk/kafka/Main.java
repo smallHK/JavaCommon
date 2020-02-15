@@ -6,8 +6,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class Main {
@@ -36,10 +34,7 @@ public class Main {
         for (int i = 0; i < limit; i++) {
 
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-
-            Map<String, Long> top = new HashMap<>();
             for (ConsumerRecord<String, String> r : records) {
-                top.put(r.topic() + "-" + r.partition(), r.offset());
                 System.out.println(r.key());
                 String json = r.value();
                 System.out.println(json);
