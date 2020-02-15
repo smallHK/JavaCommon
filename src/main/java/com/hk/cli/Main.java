@@ -4,6 +4,7 @@ import org.apache.commons.cli.*;
 
 public class Main {
 
+    //-t [task_name] 处理
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption("t", true, "执行的任务");
