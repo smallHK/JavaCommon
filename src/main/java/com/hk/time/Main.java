@@ -1,9 +1,15 @@
 package com.hk.time;
 
 import java.time.Duration;
+import java.time.Instant;
 
 public class Main {
 
+
+
+    private static void gainNowTimeStamp() {
+        System.out.println(Instant.now().getEpochSecond());
+    }
 
     //解析时间段
     private static void parseDuration() {
