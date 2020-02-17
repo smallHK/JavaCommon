@@ -1,4 +1,4 @@
-package com.hk.math;
+package com.hk.apache.math;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.LUDecomposition;
