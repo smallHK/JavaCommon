@@ -1,4 +1,4 @@
-package com.hk.se;
+package com.hk.jdk.concurrent;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

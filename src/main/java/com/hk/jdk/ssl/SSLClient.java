@@ -1,6 +1,5 @@
-package com.hk.ssl;
+package com.hk.jdk.ssl;
 
-import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;

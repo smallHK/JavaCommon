@@ -1,4 +1,4 @@
-package com.hk.se;
+package com.hk.jdk.concurrent;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
