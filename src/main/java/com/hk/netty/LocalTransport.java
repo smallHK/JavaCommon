@@ -39,7 +39,7 @@ public class LocalTransport {
                                     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                                         System.out.println("服务器读被触发");
                                         System.out.println(msg);
-                                        ctx.write("Give you serve!");
+                                        ctx.writeAndFlush("Give you serve!");
                                     }
 
                                     @Override
