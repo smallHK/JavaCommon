@@ -9,3 +9,12 @@ logs/
 db/
 
 cache/
+
+
+TomcatExamples/target
+
+
+*.war
+*.jar
+
+
