@@ -1,9 +1,49 @@
 package com.hk.jdk.concurrent;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 public class ExecutorT {
+
+
+    //测试线程池池大小控制
+    //初始线程数为0，提交任务时，增加新线程
+    private void controlPoolSize() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+
+        class Task implements Runnable {
+            @Override
+            public void run() {
+                System.out.println("Sleep forever!");
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        System.out.println(executor.getPoolSize());
+        executor.submit(new Task());
+        System.out.println(executor.getPoolSize());
+        executor.submit(new Task());
+        System.out.println(executor.getPoolSize());
+        System.out.println(executor.getQueue().size());
+
+        System.out.println("====");
+        executor.setMaximumPoolSize(2);
+        executor.setCorePoolSize(2);
+        System.out.println(executor.getPoolSize());
+        executor.submit(new Task());
+        System.out.println(executor.getPoolSize());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(executor.getQueue().size());
+
+    }
 
 
 
@@ -27,6 +67,7 @@ public class ExecutorT {
     public static void main(String[] args) {
 
         var e = new ExecutorT();
-        e.defaultFac();
+//        e.defaultFac();
+        e.controlPoolSize();
     }
 }
