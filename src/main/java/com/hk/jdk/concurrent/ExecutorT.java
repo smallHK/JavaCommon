@@ -4,8 +4,20 @@ import java.util.concurrent.*;
 
 public class ExecutorT {
 
+    //core线程设置0
+    private void coreZero() {
 
-    //线程池关闭测试
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(0, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
+        //七个任务不会拒绝
+        for(int i = 0; i < 7; i++) {
+            executor.submit(new SleepTask());
+        }
+
+        executor.shutdown();
+    }
+
+
+    //线程池关闭测试，即shutdown是否中断线程
     private void shutdownT() {
 
         ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
@@ -122,6 +134,7 @@ public class ExecutorT {
         var e = new ExecutorT();
 //        e.defaultFac();
 //        e.controlPoolSize();
-        e.shutdownT();
+//        e.shutdownT();
+        e.coreZero();
     }
 }
