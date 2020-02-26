@@ -5,28 +5,70 @@ import java.util.concurrent.*;
 public class ExecutorT {
 
 
+    //线程池关闭测试
+    private void shutdownT() {
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
+        executor.submit(() -> {
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Hello World!");
+        });
+
+        executor.shutdown();
+    }
+
+
+    //修改拒绝策略
+    private void shutdownReject() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
+
+        executor.shutdown();
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        executor.submit(new SleepTask());
+    }
+
+
+    //引发线程池i默认拒绝任务
+    private void rejectTask() {
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
+
+        //七个任务不会拒绝
+        for(int i = 0; i < 7; i++) {
+            executor.submit(new SleepTask());
+        }
+
+
+        //再添加将会引发拒接
+        try{
+            executor.submit(new SleepTask());
+
+        }catch (RejectedExecutionException e) {
+            System.out.println("task has rejected!");
+        }
+
+
+        executor.shutdown();
+        System.out.println("shut down!");
+
+    }
+
+
     //测试线程池池大小控制
     //初始线程数为0，提交任务时，增加新线程
     private void controlPoolSize() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
-        class Task implements Runnable {
-            @Override
-            public void run() {
-                System.out.println("Sleep forever!");
-                try {
-                    Thread.sleep(Long.MAX_VALUE);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
 
         System.out.println(executor.getPoolSize());
-        executor.submit(new Task());
+        executor.submit(new SleepTask());
         System.out.println(executor.getPoolSize());
-        executor.submit(new Task());
+        executor.submit(new SleepTask());
         System.out.println(executor.getPoolSize());
         System.out.println(executor.getQueue().size());
 
@@ -34,7 +76,7 @@ public class ExecutorT {
         executor.setMaximumPoolSize(2);
         executor.setCorePoolSize(2);
         System.out.println(executor.getPoolSize());
-        executor.submit(new Task());
+        executor.submit(new SleepTask());
         System.out.println(executor.getPoolSize());
         try {
             Thread.sleep(1000);
@@ -46,6 +88,17 @@ public class ExecutorT {
     }
 
 
+    class SleepTask implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("Sleep forever!");
+            try {
+                Thread.sleep(Long.MAX_VALUE);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     //测试Executors提供的默认线程工场
     private void defaultFac() {
@@ -68,6 +121,7 @@ public class ExecutorT {
 
         var e = new ExecutorT();
 //        e.defaultFac();
-        e.controlPoolSize();
+//        e.controlPoolSize();
+        e.shutdownT();
     }
 }
