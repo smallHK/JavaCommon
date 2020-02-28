@@ -10,9 +10,9 @@ db/
 
 cache/
 
-
 TomcatExamples/target
 
+spring-examples/target
 
 *.war
 *.jar
