@@ -1,72 +1,50 @@
 package com.hk.jdk.concurrent;
 
-import io.netty.handler.codec.serialization.ObjectEncoder;
-
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-class BoundedBuffer<E> {
-    final Lock lock = new ReentrantLock();
+public class Cond {
 
-    final Condition notFull = lock.newCondition();
-    final Condition notEmpty = lock.newCondition();
+    //Condition测试
+    private void firstCond() {
+        Lock lock = new ReentrantLock();
+        Condition cond = lock.newCondition();
 
-    final Object[] items = new Object[100];
-    int putptr, takeptr, count;
+        new Thread(() -> {
 
-    public void put(E x) throws InterruptedException
-    {
-        lock.lock();
-        try{
-            while (count == items.length)
-                notFull.await();
-            items[putptr] = x;
-            if (++putptr == items.length) putptr = 0;
-            ++count;
-            notEmpty.signal();
-        }finally {
-            lock.unlock();
+            lock.lock();
+            try {
+                System.out.println("该线程等待了！");
+                cond.await();
+                System.out.println("该线程被唤醒了！");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+
+        }).start();
+
+        try {
+            Thread.sleep(3 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-    }
 
-    public E take() throws InterruptedException {
+        System.out.println("开始唤醒！");
         lock.lock();
-        try{
-            while(count == 0)
-                notEmpty.await();
-            E x = (E)items[takeptr];
-            if(++takeptr == items.length) takeptr = 0;
-            --count;
-            notFull.signal();
-            return x;
+        try {
+            cond.signal();
         } finally {
             lock.unlock();
         }
-    }
-}
 
-//测试Condition功能
-public class Cond {
+
+    }
 
     public static void main(String[] args) {
-
-        Lock lock = new ReentrantLock();
-        System.out.println("start");
-        Condition con = lock.newCondition();
-        lock.lock();
-        try{
-            try {
-                System.out.println(con.awaitNanos(TimeUnit.SECONDS.toNanos(0)));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }finally {
-            lock.unlock();
-        }
-
-
-        System.out.println("finish");
+        Cond c = new Cond();
+        c.firstCond();
     }
 }
