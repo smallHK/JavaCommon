@@ -1,4 +1,4 @@
-package com.hk.net;
+package com.hk.jdk.net;
 
 import java.io.*;
 import java.net.InetSocketAddress;

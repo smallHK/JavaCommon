@@ -1,4 +1,4 @@
-package com.hk.http;
+package com.hk.apache.http;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;

@@ -32,8 +32,30 @@ public class App
     }
 
 
+
+    private static void singleBean(){
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+        Service service = (Service) ctx.getBean("sin");
+        service.printId();
+        service = (Service) ctx.getBean("sin2");
+        service.printId();
+    }
+
+    //prototype scope测试
+    private static void instantBean() {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+        Service service = (Service) ctx.getBean("pro");
+        service.printId();
+        service = (Service) ctx.getBean("pro");
+        service.printId();
+
+    }
+
+
     public static void main( String[] args )
     {
-        firstResource();
+//        firstResource();
+        singleBean();
+//        instantBean();
     }
 }
