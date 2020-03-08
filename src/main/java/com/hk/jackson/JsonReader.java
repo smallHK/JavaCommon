@@ -115,7 +115,7 @@ public class JsonReader {
 
         try {
             RawJsonBind bean = mapper.readValue(jsonStr, RawJsonBind.class);
-            System.out.println(bean.getJson());
+//            System.out.println(bean.getJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
