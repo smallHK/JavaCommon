@@ -1,4 +1,4 @@
-package com.hk.logging.log4j2;
+package com.hk.apache.log4j2;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,15 +30,5 @@ public class Main {
             Thread.sleep(2 * 1000);
         }
 
-//        logger.trace("trace");
-//        logger.debug("debug.");
-//        logger.info("info.");
-//        logger.warn("warning.");
-//        logger.error("error.");
-//        logger.fatal("fatal.");
-//        for(int i = 0; i < 1000; i++) {
-//            logger.info("message: " + i);
-//            Thread.sleep(10);
-//        }
     }
 }
