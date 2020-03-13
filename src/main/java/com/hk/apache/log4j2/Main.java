@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -14,21 +16,22 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class.getName());
 
 
-    private void stop() {
-        logger.info("Bybe!");
-    }
+    private static void firstLayout() {
+        logger.info("Hello world!");
 
-    public static void main(String[] args) throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(2);
 
-        var main = new Main();
-        Runtime.getRuntime().addShutdownHook(new Thread(()->{
-            main.stop();
-        }));
-
-        for (int i = 0; i < 10; i ++) {
-            System.out.println(1);
-            Thread.sleep(2 * 1000);
+        for(int i = 0;i < 10; i++) {
+            service.submit(() -> {
+                logger.info("This is Thread");
+            });
         }
 
+        service.shutdown();
+    }
+
+
+    public static void main(String[] args) {
+        firstLayout();
     }
 }

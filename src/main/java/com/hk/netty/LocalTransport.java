@@ -15,7 +15,7 @@ public class LocalTransport {
 
     private EventLoopGroup eventLoopGroup = new DefaultEventLoopGroup(3);
 
-    void server() {
+    private void server() {
 
         LocalAddress address = new LocalAddress("ll");
 
@@ -34,6 +34,14 @@ public class LocalTransport {
                     protected void initChannel(LocalChannel ch) throws Exception {
                         ch.pipeline().addLast(
                                 new LoggingHandler(),
+                                new ChannelInboundHandlerAdapter(){
+                                    @Override
+                                    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception { //入站处理器拦截读操作
+                                        System.out.println("拦截器服务器读操作");
+                                        ctx.fireChannelRead(msg);
+
+                                    }
+                                },
                                 new ChannelInboundHandlerAdapter() {
                                     @Override
                                     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -62,7 +70,7 @@ public class LocalTransport {
 
     }
 
-    void client() {
+    private void client() {
         LocalAddress address = new LocalAddress("ll");
 
         EventLoopGroup group = new NioEventLoopGroup();
@@ -75,9 +83,9 @@ public class LocalTransport {
                         @Override
                         protected void initChannel(LocalChannel ch) throws Exception {
                             ch.pipeline().addLast(new LoggingHandler(),
-                                    new SimpleChannelInboundHandler() {
+                                    new SimpleChannelInboundHandler<String>() {
                                         @Override
-                                        protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+                                        protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
                                             System.out.println(msg);
                                         }
                                     });
@@ -102,7 +110,7 @@ public class LocalTransport {
         }
     }
 
-    void run() {
+    private void run() {
         server();
         client();
         eventLoopGroup.shutdownGracefully();
