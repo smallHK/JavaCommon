@@ -6,8 +6,6 @@ import io.netty.util.concurrent.Future;
 
 public class Utils {
 
-
-
     //netty同步库实现异步
     private void async() {
 
