@@ -9,6 +9,43 @@ import java.nio.channels.SocketChannel;
 
 public class Select {
 
+
+    //首个非阻塞IO
+    private static void firstNonBlockingChannel() {
+        try {
+            ServerSocketChannel ch = ServerSocketChannel.open();
+            System.out.println(ch.isBlocking());
+            System.out.println(ch.isRegistered());
+
+            ch.configureBlocking(false);
+            System.out.println(ch.isBlocking());
+            ch.bind(new InetSocketAddress(8080));
+
+            new Thread(() -> {
+
+                while (true) {
+                    try {
+                        if(ch.accept() != null) {
+                            System.out.println("监听成功！");
+                            break;
+                        }else{
+                            System.out.println("无连接！");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }).start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     //客户端
     private static void firstChannel() {
         try {
@@ -57,7 +94,10 @@ public class Select {
 
     public static void main(String[] args) {
 
-        firstServerChannel();
+//        firstServerChannel();
+//        firstChannel();
+
+        firstNonBlockingChannel();
         firstChannel();
     }
 }

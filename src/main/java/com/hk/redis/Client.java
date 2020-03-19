@@ -2,6 +2,9 @@ package com.hk.redis;
 
 import io.lettuce.core.RedisClient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Client {
 
 
@@ -12,6 +15,8 @@ public class Client {
 
         command.keys("*");
         command.set("lettuce", "Hello, Redis!");
+        List<String> ar = new ArrayList<>();
+        command.lpush("", ar.toArray(new String[0]));
         connection.close();
         client.shutdown();
     }
