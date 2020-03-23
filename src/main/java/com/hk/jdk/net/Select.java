@@ -1,13 +1,42 @@
 package com.hk.jdk.net;
 
+import io.lettuce.core.ScriptOutputType;
+import net.jpountz.util.ByteBufferUtils;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 public class Select {
+
+    //非阻塞客户端socket io
+    private static void nonBlockingConnect() {
+
+        try {
+            SocketChannel ch = SocketChannel.open();
+            ch.configureBlocking(false);
+            System.out.println("connect:" + ch.connect(new InetSocketAddress(8080)));
+            System.out.println("pend: " + ch.isConnectionPending());
+            System.out.println("finish: " + ch.finishConnect());
+            System.out.println("pend: " + ch.isConnectionPending());
+
+            ByteBuffer bf = ByteBuffer.allocate(244);
+            for(char c : "Hello World!".toCharArray()) {
+                bf.putChar(c);
+            }
+            bf.flip();
+            ch.write(bf);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     //首个非阻塞IO
@@ -25,8 +54,17 @@ public class Select {
 
                 while (true) {
                     try {
-                        if(ch.accept() != null) {
+                        SocketChannel sch = null;
+                        if((sch = ch.accept()) != null) {
                             System.out.println("监听成功！");
+                            ByteBuffer buf = ByteBuffer.allocate(254);
+                            StringBuilder sb = new StringBuilder();
+                            sch.read(buf);
+                            buf.flip();
+                            while (buf.position() < buf.limit()) {
+                                sb.append(buf.getChar());
+                            }
+                            System.out.println(sb.toString());
                             break;
                         }else{
                             System.out.println("无连接！");
@@ -52,7 +90,7 @@ public class Select {
             SocketChannel channel = SocketChannel.open();
             if(channel.connect(new InetSocketAddress(8080))) {
                 System.out.println("客户端成功连接！");
-                channel.write(ByteBuffer.wrap(new String("Hello world!").getBytes()));
+                channel.write(ByteBuffer.wrap(new String("Hello world!").getBytes(Charset.forName("utf-8"))));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,6 +136,8 @@ public class Select {
 //        firstChannel();
 
         firstNonBlockingChannel();
-        firstChannel();
+//        firstChannel();
+        nonBlockingConnect();
+
     }
 }
