@@ -1,18 +1,42 @@
 package com.hk.jdk.net;
 
-import io.lettuce.core.ScriptOutputType;
-import net.jpountz.util.ByteBufferUtils;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
 public class Select {
+
+
+
+    //serverChannel注册
+    private static void firstSelectorKey() {
+        try {
+            Selector selector = Selector.open();
+
+            ServerSocketChannel serverCh = ServerSocketChannel.open();
+            serverCh.bind(new InetSocketAddress(8080));
+            serverCh.configureBlocking(false);
+            SelectionKey key = serverCh.register(selector, serverCh.validOps());
+            System.out.println(key.isValid());
+
+            System.out.println(key.interestOps());
+            System.out.println((key.interestOps() & SelectionKey.OP_ACCEPT) != 0);
+            System.out.println((key.interestOps() & SelectionKey.OP_CONNECT) != 0);
+            System.out.println((key.interestOps() & SelectionKey.OP_READ) != 0);
+            System.out.println((key.interestOps() & SelectionKey.OP_WRITE) != 0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     //非阻塞客户端socket io
     private static void nonBlockingConnect() {
@@ -135,9 +159,12 @@ public class Select {
 //        firstServerChannel();
 //        firstChannel();
 
-        firstNonBlockingChannel();
+//        firstNonBlockingChannel();
 //        firstChannel();
-        nonBlockingConnect();
+//        nonBlockingConnect();
+
+        firstSelectorKey();
 
     }
+
 }
