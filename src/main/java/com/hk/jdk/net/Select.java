@@ -13,6 +13,40 @@ public class Select {
 
 
 
+    private static void selectOpt() {
+        try {
+            Selector selector = Selector.open();
+
+            ServerSocketChannel serverCh = ServerSocketChannel.open();
+            serverCh.bind(new InetSocketAddress(8080));
+            serverCh.configureBlocking(false);
+            SelectionKey key = serverCh.register(selector, serverCh.validOps());
+
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        System.out.println("执行选择操作： " + selector.selectNow());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("就绪集合： " + selector.selectedKeys().size());
+                    if (key.isAcceptable()) {
+                        System.out.println("存在可接收连接！");
+                        break;
+                    }
+                    System.out.println("就绪集合： " + selector.selectedKeys().size());
+                }
+            }).start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     //serverChannel注册
     private static void firstSelectorKey() {
         try {
@@ -163,7 +197,15 @@ public class Select {
 //        firstChannel();
 //        nonBlockingConnect();
 
-        firstSelectorKey();
+//        firstSelectorKey();
+
+        selectOpt();
+        try {
+            Thread.sleep(3 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        firstChannel();
 
     }
 
