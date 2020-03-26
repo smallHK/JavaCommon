@@ -8,9 +8,89 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Select {
 
+    //无阻塞连接建立，SelectionKey就绪状态变化
+    private static void selectConnect() {
+
+        try {
+            Selector selector = Selector.open();
+            SocketChannel client = SocketChannel.open();
+            client.configureBlocking(false);
+
+            Map<Integer, String> sMap = new HashMap<>();
+
+            ServerSocketChannel server = ServerSocketChannel.open();
+            server.configureBlocking(false);
+            server.bind(new InetSocketAddress(8080));
+            SelectionKey clientKey = client.register(selector, client.validOps());
+            SelectionKey serverKey = server.register(selector, server.validOps());
+            System.out.println(serverKey.hashCode() + ":" + serverKey.isAcceptable());
+            sMap.put(clientKey.hashCode(), "client");
+            sMap.put(serverKey.hashCode(), "server");
+
+            client.connect(new InetSocketAddress(8080));
+            selector.selectNow();
+            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+            System.out.println("有效键： " + selector.selectedKeys().size());
+            while (it.hasNext()) {
+                SelectionKey key = it.next();
+                System.out.println(sMap.get(key.hashCode()));
+                System.out.println("可读： " + key.isReadable());
+                System.out.println("可写： " + key.isWritable());
+                System.out.println("可连接： " + key.isConnectable());
+                System.out.println("可接受： " + key.isAcceptable());
+                System.out.println();
+                it.remove();
+            }
+            System.out.println("=============");
+
+
+            SocketChannel ch = server.accept();
+            selector.selectNow();
+            it = selector.selectedKeys().iterator();
+            System.out.println("有效键： " + selector.selectedKeys().size());
+            while (it.hasNext()) {
+                SelectionKey key = it.next();
+                System.out.println(sMap.get(key.hashCode()));
+                System.out.println("可读： " + key.isReadable());
+                System.out.println("可写： " + key.isWritable());
+                System.out.println("可连接： " + key.isConnectable());
+                System.out.println("可接受： " + key.isAcceptable());
+                System.out.println();
+                it.remove();
+            }
+            System.out.println("=============");
+
+
+            client.finishConnect();
+            ch.configureBlocking(false);
+            System.out.println(ch.hashCode());
+            ch.register(selector, ch.validOps());
+            selector.selectNow();
+            it = selector.selectedKeys().iterator();
+            System.out.println("有效键： " + selector.selectedKeys().size());
+            while (it.hasNext()) {
+                SelectionKey key = it.next();
+                System.out.println(sMap.get(key.hashCode()));
+                System.out.println("可读： " + key.isReadable());
+                System.out.println("可写： " + key.isWritable());
+                System.out.println("可连接： " + key.isConnectable());
+                System.out.println("可接受： " + key.isAcceptable());
+                System.out.println();
+                it.remove();
+            }
+            System.out.println("=============");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     private static void selectOpt() {
@@ -199,14 +279,14 @@ public class Select {
 
 //        firstSelectorKey();
 
-        selectOpt();
-        try {
-            Thread.sleep(3 * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        firstChannel();
-
+//        selectOpt();
+//        try {
+//            Thread.sleep(3 * 1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        firstChannel();
+        selectConnect();
     }
 
 }
