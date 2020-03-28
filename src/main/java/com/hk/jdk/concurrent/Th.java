@@ -3,8 +3,36 @@ package com.hk.jdk.concurrent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Th {
+
+    //ThreadGroup中断线程
+    private static void group() {
+        ThreadGroup group = new ThreadGroup("boss");
+        BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+        for(int i  = 0; i < 4; i++) {
+            new Thread(group, () -> {
+                try {
+                    queue.take();
+                } catch (InterruptedException e) {
+                    System.out.println(Thread.currentThread().getName() + "被中断，退出！");
+                }
+            }, "worker: " + i).start();
+        }
+
+        System.out.println("main睡眠");
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("开始中断！");
+        group.interrupt();
+    }
 
 
     private static void inter() {
