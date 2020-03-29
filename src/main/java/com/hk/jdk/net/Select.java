@@ -14,6 +14,23 @@ import java.util.Map;
 
 public class Select {
 
+    //取消后注册
+    private static void cancel() {
+        try {
+            SocketChannel ch = SocketChannel.open();
+            ch.configureBlocking(false);
+            Selector selector = Selector.open();
+            SelectionKey key = ch.register(selector, ch.validOps());
+            System.out.println(key.hashCode());
+            key.cancel();
+            selector.selectNow();
+            key = ch.register(selector, ch.validOps());
+            System.out.println(key.hashCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     //无阻塞连接建立，SelectionKey就绪状态变化
     private static void selectConnect() {
 
@@ -286,7 +303,9 @@ public class Select {
 //            e.printStackTrace();
 //        }
 //        firstChannel();
-        selectConnect();
+//        selectConnect();
+
+        cancel();
     }
 
 }
