@@ -64,6 +64,7 @@ public class JsonBuild {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("data", "123");
+        jsonMap.put("ttt", null);
         try {
             String result = mapper.writeValueAsString(jsonMap);
             System.out.println(result);
@@ -73,7 +74,7 @@ public class JsonBuild {
     }
 
     public static void main(String[] args) {
-//        buildJsonByMap();
-        buildJsonByTree();
+        buildJsonByMap();
+//        buildJsonByTree();
     }
 }
