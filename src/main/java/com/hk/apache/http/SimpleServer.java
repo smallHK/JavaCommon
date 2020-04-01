@@ -1,5 +1,6 @@
 package com.hk.apache.http;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -23,9 +25,22 @@ public class SimpleServer {
 
     private HttpRequestHandler handler = (request, response, context) -> {
 
+        Header header = request.getFirstHeader("Auth");
+        if (!"password".equals(header.getValue())) {
+            System.out.println("验证失败！");
+            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+            try (var is = entity.getContent()) {
+                String result = new String(is.readAllBytes());
+                System.out.println(result);
+            }
+            response.setEntity(new StringEntity("Wrong it!"));
+            response.setStatusCode(HttpStatus.SC_UNAUTHORIZED);
+            return;
+        }
+
         System.out.println("Accept Request!");
-        HttpEntity entity = ((HttpEntityEnclosingRequest)request).getEntity();
-        try(var is = entity.getContent()) {
+        HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+        try (var is = entity.getContent()) {
             String result = new String(is.readAllBytes());
             System.out.println(result);
         }
