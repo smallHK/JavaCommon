@@ -4,6 +4,90 @@ import java.util.concurrent.*;
 
 public class ExecutorT {
 
+
+    private static void callRun() {
+        ThreadPoolExecutor service = new ThreadPoolExecutor(2, 2, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(3));
+        service.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        for(int i = 0; i < 10; i++) {
+            service.submit(() -> {
+                try {
+                    Thread.sleep(3 *1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("任务完成！");
+            });
+            System.out.println("任务" + i + "提交");
+        }
+
+        service.shutdown();
+        try {
+            service.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("完成执行");
+
+    }
+
+    private static void await() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(0, 2, Long.MAX_VALUE, TimeUnit.SECONDS, new ArrayBlockingQueue<>(5));
+
+        executor.submit(() -> {
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("任务1完成");
+        });
+
+        executor.submit(() -> {
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("任务2完成");
+        });
+
+        executor.submit(() -> {
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("任务3完成");
+        });
+
+        executor.submit(() -> {
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("任务4完成");
+        });
+
+        executor.submit(() -> {
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("任务5完成");
+        });
+
+        executor.shutdown();
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("完成执行");
+    }
+
     //core线程设置0
     private void coreZero() {
 
@@ -135,6 +219,8 @@ public class ExecutorT {
 //        e.defaultFac();
 //        e.controlPoolSize();
 //        e.shutdownT();
-        e.coreZero();
+//        e.coreZero();
+//        await();
+        callRun();
     }
 }

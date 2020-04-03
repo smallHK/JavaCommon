@@ -1,4 +1,4 @@
-package com.hk.kafka;
+package com.hk.apache.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -18,8 +18,8 @@ public class Main {
     private void consume() {
 
         Properties props = new Properties();
-        props.setProperty("bootstrap.servers", "xxx:9092,sss:9092");
-        props.setProperty("group.id", "transfer.consumer_id");
+        props.setProperty("bootstrap.servers", "localhost:9092");
+        props.setProperty("group.id", "test");
         props.setProperty("auto.offset.reset", "earliest");
         props.setProperty("auto.offset.commit", "false");
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

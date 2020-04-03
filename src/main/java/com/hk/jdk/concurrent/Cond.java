@@ -1,10 +1,32 @@
 package com.hk.jdk.concurrent;
 
+import com.google.inject.internal.cglib.core.$ClassNameReader;
+
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Cond {
+
+
+    private static void condAwait() {
+
+        Lock lock = new ReentrantLock();
+        Condition cond = lock.newCondition();
+        try {
+            lock.lock();
+            System.out.println("before wait");
+//            cond.awaitNanos(TimeUnit.SECONDS.toSeconds(3));
+            System.out.println(cond.awaitNanos(TimeUnit.SECONDS.toSeconds(3)));
+            System.out.println("after wait");
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
+        }
+    }
 
     //Condition测试
     private void firstCond() {
@@ -44,7 +66,9 @@ public class Cond {
     }
 
     public static void main(String[] args) {
-        Cond c = new Cond();
-        c.firstCond();
+//        Cond c = new Cond();
+//        c.firstCond();
+
+        condAwait();
     }
 }
