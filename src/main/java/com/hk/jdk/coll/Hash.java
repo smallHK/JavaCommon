@@ -10,6 +10,7 @@ public class Hash {
     private static void hashMap() {
         HashMap<String, Integer> map = new HashMap<>();
         map.put("xxx", 123);
+        map.get("xxx");
     }
 
     private void hashTable() {
