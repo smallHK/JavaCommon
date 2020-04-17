@@ -1,5 +1,7 @@
 package com.hk.jdk.concurrent;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class TLocal {
 
     private static ThreadLocal<Integer> local = ThreadLocal.withInitial(() -> 1);
@@ -19,7 +21,15 @@ public class TLocal {
         }
     }
 
+    private static void localRandom() {
+
+        for(int i = 0; i <10; i ++) {
+            System.out.println(ThreadLocalRandom.current().nextInt());
+        }
+    }
+
     public static void main(String[] args) {
-        firstThreadLocal();
+//        firstThreadLocal();
+        localRandom();
     }
 }

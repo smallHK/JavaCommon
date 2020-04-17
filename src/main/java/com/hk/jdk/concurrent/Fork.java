@@ -1,15 +1,53 @@
 package com.hk.jdk.concurrent;
 
 import java.lang.reflect.Field;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinWorkerThread;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author smallHK
  * 2020/4/11 22:44
  */
 public class Fork {
+
+
+    private static void f() {
+        class Fibonacci extends RecursiveTask<Integer> {
+            final int n;
+            Fibonacci(int n) {
+                this.n = n;
+            }
+
+            @Override
+            protected Integer compute() {
+                if(n <= 1) return n;
+                Fibonacci f1 = new Fibonacci(n - 1);
+                f1.fork();
+                Fibonacci f2 = new Fibonacci(n - 2);
+                return f2.compute() + f1.join();
+            }
+        }
+
+
+        Fibonacci b = new Fibonacci(13);
+
+        System.out.println(b.compute());
+
+
+    }
+
+    private static void forkJoinTask() {
+        ForkJoinTask task = ForkJoinTask.adapt(() -> {
+            System.out.println("Hello World!");
+        });
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        pool.submit(task);
+        pool.shutdown();
+        try {
+            pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void commonFactory() {
         ForkJoinPool pool = ForkJoinPool.commonPool();
@@ -63,6 +101,9 @@ public class Fork {
     public static void main(String[] args) {
 
 //        commonPool();
-        commonFactory();
+//        commonFactory();
+//        forkJoinTask();
+
+        f();
     }
 }
