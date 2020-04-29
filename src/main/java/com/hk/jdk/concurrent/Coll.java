@@ -1,8 +1,17 @@
 package com.hk.jdk.concurrent;
 
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Coll {
+
+    private void copyOnWrite() {
+        CopyOnWriteArrayList<Integer> list = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < 100; i++) {
+            list.add(i);
+        }
+        System.out.println(list.size());
+    }
 
 
     /**
@@ -22,6 +31,7 @@ public class Coll {
 
     public static void main(String[] args) {
         var main = new Coll();
-        main.run();
+//        main.run();
+        main.copyOnWrite();
     }
 }

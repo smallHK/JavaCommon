@@ -180,7 +180,6 @@ public class Syn {
                 System.out.println(compareAndSetState(121323, 123));
                 System.out.println("状态： " + getState());
             }
-
         }
         S s = new S();
         s.run();
